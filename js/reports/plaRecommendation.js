@@ -9,13 +9,16 @@ export function renderPLAReport(data) {
 
   const container = document.querySelector(".report-content");
 
-  // SORT BY GROSS HIGH → LOW
   fullData = [...data].sort((a, b) => b.gross - a.gross);
   filteredData = [...fullData];
   currentIndex = 0;
 
   container.innerHTML = `
-    ${buildFilters()}
+    <div class="report-header">
+      <div></div>
+      ${buildFilters()}
+    </div>
+
     <table>
       <thead>
         <tr>
@@ -30,6 +33,7 @@ export function renderPLAReport(data) {
       </thead>
       <tbody id="pla-body"></tbody>
     </table>
+
     <div class="load-more-wrapper">
       <button id="pla-load-more" class="tab-btn">Load More</button>
     </div>
@@ -45,13 +49,13 @@ function buildFilters() {
   const decisions = [...new Set(fullData.map(r => r.decision))];
 
   return `
-    <div class="report-filters">
-      <select id="filter-brand">
+    <div class="filter-pills">
+      <select id="filter-brand" class="pill-select">
         <option value="">All Brands</option>
         ${brands.map(b => `<option value="${b}">${b}</option>`).join("")}
       </select>
 
-      <select id="filter-decision">
+      <select id="filter-decision" class="pill-select">
         <option value="">All Decisions</option>
         ${decisions.map(d => `<option value="${d}">${d}</option>`).join("")}
       </select>
