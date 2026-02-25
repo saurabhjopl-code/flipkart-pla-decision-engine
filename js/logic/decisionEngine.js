@@ -3,6 +3,7 @@
 export function mergeData(trafficData, salesData) {
 
   const salesMap = new Map();
+
   salesData.forEach(row => {
     salesMap.set(row.mpsku, row);
   });
@@ -13,32 +14,38 @@ export function mergeData(trafficData, salesData) {
 
     const s = salesMap.get(t.mpsku) || {};
 
-    const views = Number(t.product_views) || 0;
-    const clicks = Number(t.product_clicks) || 0;
-    const revenue = Number(t.revenue) || 0;
-    const ctr = Number(t.CTR) || 0;
-
-    const gross = Number(s.gross_month_sale) || 0;
-    const net = Number(s.net_month_sale) || 0;
-    const last7 = Number(s.last_7_days_sale) || 0;
-    const stock = Number(s.total_stock) || 0;
-    const stockCover = Number(s.stock_cover_days) || 0;
-
     merged.push(applyDecision({
+
+      /* ===== TRAFFIC DATA ===== */
       mpsku: t.mpsku,
       brand: t.brand,
       category: t.category,
       vertical: t.vertical,
-      views,
-      clicks,
-      revenue,
-      ctr,
-      gross,
-      net,
-      last7,
-      stock,
-      stockCover,
+
+      views: Number(t.product_views) || 0,
+      clicks: Number(t.product_clicks) || 0,
+      revenue: Number(t.revenue) || 0,
+      ctr: Number(t.CTR) || 0,
+
+      /* ===== SALES UNITS ===== */
+      gross: Number(s.gross_month_sale) || 0,
+      net: Number(s.net_month_sale) || 0,
+      last7: Number(s.last_7_days_sale) || 0,
+
+      /* ===== FINANCIAL METRICS ===== */
+      gross_revenue: Number(s.gross_revenue) || 0,
+      cancellation_units: Number(s.cancellation_units) || 0,
+      cancellation_amount: Number(s.cancellation_amount) || 0,
+      return_units: Number(s.return_units) || 0,
+      return_amount: Number(s.return_amount) || 0,
+      net_revenue: Number(s.net_revenue) || 0,
+
+      /* ===== STOCK ===== */
+      stock: Number(s.total_stock) || 0,
+      stockCover: Number(s.stock_cover_days) || 0,
+
       remark: s.remark || ""
+
     }));
 
   });
@@ -46,6 +53,7 @@ export function mergeData(trafficData, salesData) {
   return merged;
 }
 
+/* ================= DECISION LOGIC ================= */
 
 function applyDecision(row) {
 
