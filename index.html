@@ -90,41 +90,51 @@
 
   <!-- ================= JS MODULE LOADER ================= -->
   <script type="module">
-    import { CONFIG } from "./js/core/config.js";
-    import { fetchCSV } from "./js/core/dataLoader.js";
-    import { mergeData } from "./js/logic/decisionEngine.js";
-    import { renderPLAReport } from "./js/reports/plaRecommendation.js";
+  import { CONFIG } from "./js/core/config.js";
+  import { fetchCSV } from "./js/core/dataLoader.js";
+  import { mergeData } from "./js/logic/decisionEngine.js";
+  import { renderPLAReport } from "./js/reports/plaRecommendation.js";
+  import { renderStockRisk } from "./js/reports/stockRisk.js";
+  import { renderListingIssues } from "./js/reports/listingIssue.js";
+  import { renderScalingOpportunities } from "./js/reports/scaling.js";
 
-    async function init() {
-      const traffic = await fetchCSV(CONFIG.TRAFFIC_URL);
-      const sales = await fetchCSV(CONFIG.SALES_URL);
+  let mergedData = [];
 
-      const merged = mergeData(traffic, sales);
-      renderPLAReport(merged);
-    }
+  async function init() {
+    const traffic = await fetchCSV(CONFIG.TRAFFIC_URL);
+    const sales = await fetchCSV(CONFIG.SALES_URL);
 
-    init();
+    mergedData = mergeData(traffic, sales);
+    renderPLAReport(mergedData);
+  }
 
-    // Tab Switching
-    const tabs = document.querySelectorAll(".tab-btn");
-    const reportTitle = document.querySelector(".report-title");
+  init();
 
-    const titles = {
-      pla: "PLA Recommendation Report",
-      stock: "Stock Risk Report",
-      listing: "Listing Issue Report",
-      scaling: "Scaling Opportunity Report"
-    };
+  const tabs = document.querySelectorAll(".tab-btn");
+  const reportTitle = document.querySelector(".report-title");
 
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-        reportTitle.textContent = titles[tab.dataset.tab];
-      });
+  const titles = {
+    pla: "PLA Recommendation Report",
+    stock: "Stock Risk Report",
+    listing: "Listing Issue Report",
+    scaling: "Scaling Opportunity Report"
+  };
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      const type = tab.dataset.tab;
+      reportTitle.textContent = titles[type];
+
+      if (type === "pla") renderPLAReport(mergedData);
+      if (type === "stock") renderStockRisk(mergedData);
+      if (type === "listing") renderListingIssues(mergedData);
+      if (type === "scaling") renderScalingOpportunities(mergedData);
     });
-
-  </script>
+  });
+</script>
 
 </body>
 </html>
