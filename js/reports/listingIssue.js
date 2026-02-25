@@ -1,16 +1,16 @@
 // js/reports/listingIssue.js
 
+let fullData = [];
 let currentIndex = 0;
 const PAGE_SIZE = 50;
-let fullData = [];
 
 export function renderListingIssues(data) {
+
   const container = document.querySelector(".report-content");
 
-  // Filter: High views but zero net sale
-  fullData = data.filter(row =>
-    row.views > 1000 && row.net === 0
-  );
+  fullData = data
+    .filter(row => row.views > 1000 && row.net === 0)
+    .sort((a, b) => b.views - a.views);
 
   currentIndex = 0;
 
@@ -33,13 +33,12 @@ export function renderListingIssues(data) {
   `;
 
   loadMoreRows();
-
-  document
-    .getElementById("listing-load-more")
+  document.getElementById("listing-load-more")
     .addEventListener("click", loadMoreRows);
 }
 
 function loadMoreRows() {
+
   const tbody = document.getElementById("listing-body");
   const nextChunk = fullData.slice(currentIndex, currentIndex + PAGE_SIZE);
 
@@ -58,7 +57,6 @@ function loadMoreRows() {
   currentIndex += PAGE_SIZE;
 
   if (currentIndex >= fullData.length) {
-    const btn = document.getElementById("listing-load-more");
-    if (btn) btn.style.display = "none";
+    document.getElementById("listing-load-more").style.display = "none";
   }
 }
