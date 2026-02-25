@@ -55,8 +55,13 @@ function renderSalesSummary(data) {
   const returnUnits = sum(data, "return_units");
   const returnAmount = sum(data, "return_amount");
 
-  const netUnits = sum(data, "net");
-  const netRevenue = sum(data, "net_revenue");
+  /* ===== CORRECT BUSINESS CALCULATION ===== */
+
+  const salesAfterCancellationUnits = grossUnits - cancellationUnits;
+  const salesAfterCancellationRevenue = grossRevenue - cancellationAmount;
+
+  const netUnits = salesAfterCancellationUnits - returnUnits;
+  const netRevenue = salesAfterCancellationRevenue - returnAmount;
 
   container.innerHTML = `
     ${buildCard(
@@ -73,8 +78,8 @@ function renderSalesSummary(data) {
 
     ${buildCard(
       "Sales After Cancellations",
-      formatNumber(netUnits),
-      "₹ " + formatCurrencyShort(netRevenue)
+      formatNumber(salesAfterCancellationUnits),
+      "₹ " + formatCurrencyShort(salesAfterCancellationRevenue)
     )}
 
     ${buildCard(
@@ -111,7 +116,6 @@ function formatNumber(num) {
   return num.toLocaleString("en-IN");
 }
 
-/* ₹ Short Format (Lakhs / Crores Ready) */
 function formatCurrencyShort(num) {
 
   if (num >= 10000000) {
