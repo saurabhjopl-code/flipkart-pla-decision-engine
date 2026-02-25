@@ -5,189 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Flipkart PLA Intelligence Engine</title>
 
+  <!-- CSS -->
   <link rel="stylesheet" href="./css/reset.css" />
   <link rel="stylesheet" href="./css/variables.css" />
   <link rel="stylesheet" href="./css/layout.css" />
   <link rel="stylesheet" href="./css/components.css" />
-
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #f4f7fb, #eef2f9);
-      margin: 0;
-      color: #1e293b;
-    }
-
-    /* HEADER */
-    .app-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(16px);
-      background: rgba(255,255,255,0.75);
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.05);
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .header-inner {
-      width: 95%;
-      max-width: 1400px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      align-items: center;
-    }
-
-    .logo {
-      justify-self: start;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo img {
-      height: 36px;
-    }
-
-    .app-title {
-      justify-self: center;
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-    }
-
-    .header-right {
-      justify-self: end;
-    }
-
-    /* MAIN WRAPPER */
-    .main-wrapper {
-      width: 95%;
-      max-width: 1400px;
-      margin: 40px auto;
-    }
-
-    /* SUMMARY PLACEHOLDER */
-    .summary-placeholder {
-      height: 120px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.8);
-      border: 1px dashed rgba(0,0,0,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 35px;
-      color: #64748b;
-      font-size: 14px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.05);
-    }
-
-    /* REPORT TABS */
-    .tabs {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 25px;
-    }
-
-    .tab-btn {
-      padding: 10px 22px;
-      border-radius: 14px;
-      border: none;
-      cursor: pointer;
-      background: white;
-      font-weight: 500;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-
-    .tab-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
-
-    .tab-btn.active {
-      background: #2563eb;
-      color: white;
-      box-shadow: 0 8px 20px rgba(37,99,235,0.4);
-    }
-
-    /* REPORT CARD */
-    .report-container {
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
-      min-height: 500px;
-      transition: all 0.3s ease;
-    }
-
-    .report-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
-
-    .placeholder {
-      padding: 50px;
-      border-radius: 16px;
-      background: #f8fafc;
-      text-align: center;
-      color: #64748b;
-      font-size: 15px;
-    }
-  </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
+  <!-- ================= HEADER ================= -->
   <header class="app-header">
-    <div class="header-inner">
-      <div class="logo">
-        <img src="./assets/logo.png" alt="Logo">
+    <div class="header-container">
+
+      <!-- Left: Logo -->
+      <div class="header-left">
+        <img src="./assets/logo.png" alt="Logo" class="app-logo" />
       </div>
 
-      <div class="app-title">
-        Flipkart PLA Intelligence Engine
+      <!-- Center: App Name -->
+      <div class="header-center">
+        <h1 class="app-title">
+          Flipkart PLA Intelligence Engine
+        </h1>
       </div>
 
+      <!-- Right: Reserved -->
       <div class="header-right">
-        <!-- Future: Export / Profile -->
+        <!-- Future: Export Button / Profile / Settings -->
       </div>
+
     </div>
   </header>
 
-  <!-- MAIN -->
-  <div class="main-wrapper">
 
-    <!-- SUMMARY PLACEHOLDER -->
-    <div class="summary-placeholder">
-      Summary Section (Reserved – To Be Added Later)
-    </div>
+  <!-- ================= MAIN WRAPPER ================= -->
+  <main class="main-wrapper">
 
-    <!-- REPORT TABS -->
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="pla">PLA Recommendation</button>
-      <button class="tab-btn" data-tab="stock">Stock Risk</button>
-      <button class="tab-btn" data-tab="listing">Listing Issues</button>
-      <button class="tab-btn" data-tab="scaling">Scaling Opportunities</button>
-    </div>
-
-    <!-- REPORT CONTAINER -->
-    <div class="report-container">
-      <div class="report-title">PLA Recommendation Report</div>
-      <div class="placeholder">
-        Report data will render here after connecting master sheets.
+    <!-- Summary Placeholder (Reserved for Future KPIs) -->
+    <section class="summary-section">
+      <div class="summary-placeholder">
+        Summary Section (Reserved – To Be Added Later)
       </div>
-    </div>
+    </section>
 
-  </div>
 
-  <script>
+    <!-- ================= REPORT TABS ================= -->
+    <section class="reports-section">
+
+      <div class="report-tabs">
+        <button class="tab-btn active" data-tab="pla">
+          PLA Recommendation
+        </button>
+
+        <button class="tab-btn" data-tab="stock">
+          Stock Risk
+        </button>
+
+        <button class="tab-btn" data-tab="listing">
+          Listing Issues
+        </button>
+
+        <button class="tab-btn" data-tab="scaling">
+          Scaling Opportunities
+        </button>
+      </div>
+
+
+      <!-- ================= REPORT CONTAINER ================= -->
+      <div class="report-container">
+        <div class="report-title">
+          PLA Recommendation Report
+        </div>
+
+        <div class="report-content">
+          <!-- JS will render table here -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= JS MODULE LOADER ================= -->
+  <script type="module">
+    import { CONFIG } from "./js/core/config.js";
+    import { fetchCSV } from "./js/core/dataLoader.js";
+    import { mergeData } from "./js/logic/decisionEngine.js";
+    import { renderPLAReport } from "./js/reports/plaRecommendation.js";
+
+    async function init() {
+      const traffic = await fetchCSV(CONFIG.TRAFFIC_URL);
+      const sales = await fetchCSV(CONFIG.SALES_URL);
+
+      const merged = mergeData(traffic, sales);
+      renderPLAReport(merged);
+    }
+
+    init();
+
+    // Tab Switching
     const tabs = document.querySelectorAll(".tab-btn");
     const reportTitle = document.querySelector(".report-title");
 
@@ -205,22 +123,8 @@
         reportTitle.textContent = titles[tab.dataset.tab];
       });
     });
+
   </script>
-<script type="module">
-  import { CONFIG } from "./js/core/config.js";
-  import { fetchCSV } from "./js/core/dataLoader.js";
-  import { mergeData } from "./js/logic/decisionEngine.js";
-  import { renderPLAReport } from "./js/reports/plaRecommendation.js";
 
-  async function init() {
-    const traffic = await fetchCSV(CONFIG.TRAFFIC_URL);
-    const sales = await fetchCSV(CONFIG.SALES_URL);
-
-    const merged = mergeData(traffic, sales);
-    renderPLAReport(merged);
-  }
-
-  init();
-</script>
 </body>
 </html>
