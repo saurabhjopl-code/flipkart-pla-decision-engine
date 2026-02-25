@@ -1,16 +1,16 @@
 // js/reports/scaling.js
 
+let fullData = [];
 let currentIndex = 0;
 const PAGE_SIZE = 50;
-let fullData = [];
 
 export function renderScalingOpportunities(data) {
+
   const container = document.querySelector(".report-content");
 
-  // Filter: High stock cover + good recent sales
-  fullData = data.filter(row =>
-    row.stockCover > 20 && row.last7 > 5
-  );
+  fullData = data
+    .filter(row => row.stockCover > 20 && row.last7 > 5)
+    .sort((a, b) => b.net - a.net);
 
   currentIndex = 0;
 
@@ -34,13 +34,12 @@ export function renderScalingOpportunities(data) {
   `;
 
   loadMoreRows();
-
-  document
-    .getElementById("scaling-load-more")
+  document.getElementById("scaling-load-more")
     .addEventListener("click", loadMoreRows);
 }
 
 function loadMoreRows() {
+
   const tbody = document.getElementById("scaling-body");
   const nextChunk = fullData.slice(currentIndex, currentIndex + PAGE_SIZE);
 
@@ -60,7 +59,6 @@ function loadMoreRows() {
   currentIndex += PAGE_SIZE;
 
   if (currentIndex >= fullData.length) {
-    const btn = document.getElementById("scaling-load-more");
-    if (btn) btn.style.display = "none";
+    document.getElementById("scaling-load-more").style.display = "none";
   }
 }
