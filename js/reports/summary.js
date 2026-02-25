@@ -5,51 +5,93 @@ export function renderSummary(mergedData) {
   renderSalesSummary(mergedData);
 }
 
+/* ================= TRAFFIC SUMMARY ================= */
+
 function renderTrafficSummary(data) {
 
   const container = document.getElementById("traffic-summary");
 
   const totalImpressions = sum(data, "views");
   const totalGrossUnits = sum(data, "gross");
-  const totalRevenue = sum(data, "revenue");
-  const totalNet = sum(data, "net");
+  const totalRevenue = sum(data, "gross_revenue");
+  const totalNetUnits = sum(data, "net");
 
   const conversionRate =
     totalImpressions === 0
       ? 0
-      : (totalNet / totalImpressions) * 100;
+      : (totalNetUnits / totalImpressions) * 100;
 
   container.innerHTML = `
-    ${buildCard("Impressions", formatNumber(totalImpressions))}
-    ${buildCard("Conversion Rate", conversionRate.toFixed(2) + "%")}
+    ${buildCard(
+      "Impressions",
+      formatNumber(totalImpressions)
+    )}
+
+    ${buildCard(
+      "Conversion Rate",
+      conversionRate.toFixed(2) + "%"
+    )}
+
     ${buildCard(
       "Gross Units & Sales",
       formatNumber(totalGrossUnits) + " Units",
-      "₹" + formatCurrency(totalRevenue)
+      "₹ " + formatCurrencyShort(totalRevenue)
     )}
   `;
 }
+
+/* ================= SALES SUMMARY ================= */
 
 function renderSalesSummary(data) {
 
   const container = document.getElementById("sales-summary");
 
-  const grossSales = sum(data, "gross");
-  const netSales = sum(data, "net");
-  const totalRevenue = sum(data, "revenue");
+  const grossUnits = sum(data, "gross");
+  const grossRevenue = sum(data, "gross_revenue");
 
-  const cancellations = grossSales - netSales;
-  const salesAfterCancellation = netSales;
-  const returns = 0; // can enhance later
+  const cancellationUnits = sum(data, "cancellation_units");
+  const cancellationAmount = sum(data, "cancellation_amount");
+
+  const returnUnits = sum(data, "return_units");
+  const returnAmount = sum(data, "return_amount");
+
+  const netUnits = sum(data, "net");
+  const netRevenue = sum(data, "net_revenue");
 
   container.innerHTML = `
-    ${buildCard("Gross Sales", formatNumber(grossSales))}
-    ${buildCard("Cancellations", formatNumber(cancellations))}
-    ${buildCard("Sales After Cancellations", formatNumber(salesAfterCancellation))}
-    ${buildCard("Returns", formatNumber(returns))}
-    ${buildCard("Net Sales", formatNumber(netSales))}
+    ${buildCard(
+      "Gross Sales",
+      formatNumber(grossUnits),
+      "₹ " + formatCurrencyShort(grossRevenue)
+    )}
+
+    ${buildCard(
+      "Cancellations",
+      formatNumber(cancellationUnits),
+      "₹ " + formatCurrencyShort(cancellationAmount)
+    )}
+
+    ${buildCard(
+      "Sales After Cancellations",
+      formatNumber(netUnits),
+      "₹ " + formatCurrencyShort(netRevenue)
+    )}
+
+    ${buildCard(
+      "Returns",
+      formatNumber(returnUnits),
+      "₹ " + formatCurrencyShort(returnAmount)
+    )}
+
+    ${buildCard(
+      "Net Sales",
+      formatNumber(netUnits),
+      "₹ " + formatCurrencyShort(netRevenue)
+    )}
   `;
 }
+
+/* ================= HELPERS ================= */
 
 function buildCard(title, value, subtext = "") {
   return `
@@ -69,6 +111,16 @@ function formatNumber(num) {
   return num.toLocaleString("en-IN");
 }
 
-function formatCurrency(num) {
+/* ₹ Short Format (Lakhs / Crores Ready) */
+function formatCurrencyShort(num) {
+
+  if (num >= 10000000) {
+    return (num / 10000000).toFixed(2) + " Cr";
+  }
+
+  if (num >= 100000) {
+    return (num / 100000).toFixed(2) + " L";
+  }
+
   return num.toLocaleString("en-IN");
 }
