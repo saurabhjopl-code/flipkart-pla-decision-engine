@@ -206,6 +206,21 @@
       });
     });
   </script>
+<script type="module">
+  import { CONFIG } from "./js/core/config.js";
+  import { fetchCSV } from "./js/core/dataLoader.js";
+  import { mergeData } from "./js/logic/decisionEngine.js";
+  import { renderPLAReport } from "./js/reports/plaRecommendation.js";
 
+  async function init() {
+    const traffic = await fetchCSV(CONFIG.TRAFFIC_URL);
+    const sales = await fetchCSV(CONFIG.SALES_URL);
+
+    const merged = mergeData(traffic, sales);
+    renderPLAReport(merged);
+  }
+
+  init();
+</script>
 </body>
 </html>
