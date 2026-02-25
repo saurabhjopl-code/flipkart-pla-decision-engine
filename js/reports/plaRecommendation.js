@@ -7,18 +7,22 @@ const PAGE_SIZE = 50;
 
 export function renderPLAReport(data) {
 
-  const container = document.querySelector(".report-content");
+  const contentContainer = document.querySelector(".report-content");
+  const titleContainer = document.querySelector(".report-title");
 
   fullData = [...data].sort((a, b) => b.gross - a.gross);
   filteredData = [...fullData];
   currentIndex = 0;
 
-  container.innerHTML = `
-    <div class="report-header">
-      <div></div>
+  // Inject filters inside title row
+  titleContainer.innerHTML = `
+    <div class="report-title-row">
+      <span>PLA Recommendation Report</span>
       ${buildFilters()}
     </div>
+  `;
 
+  contentContainer.innerHTML = `
     <table>
       <thead>
         <tr>
