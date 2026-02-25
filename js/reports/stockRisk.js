@@ -1,16 +1,16 @@
 // js/reports/stockRisk.js
 
+let fullData = [];
 let currentIndex = 0;
 const PAGE_SIZE = 50;
-let fullData = [];
 
 export function renderStockRisk(data) {
+
   const container = document.querySelector(".report-content");
 
-  // Filter: Low stock cover (0 < cover < 7)
-  fullData = data.filter(row =>
-    row.stockCover > 0 && row.stockCover < 7
-  );
+  fullData = data
+    .filter(row => row.stockCover > 0 && row.stockCover < 7)
+    .sort((a, b) => b.last7 - a.last7);
 
   currentIndex = 0;
 
@@ -22,7 +22,7 @@ export function renderStockRisk(data) {
           <th>Brand</th>
           <th>Stock</th>
           <th>Stock Cover</th>
-          <th>Last 7 Days Sale</th>
+          <th>Last 7 Days</th>
         </tr>
       </thead>
       <tbody id="stock-body"></tbody>
@@ -33,13 +33,12 @@ export function renderStockRisk(data) {
   `;
 
   loadMoreRows();
-
-  document
-    .getElementById("stock-load-more")
+  document.getElementById("stock-load-more")
     .addEventListener("click", loadMoreRows);
 }
 
 function loadMoreRows() {
+
   const tbody = document.getElementById("stock-body");
   const nextChunk = fullData.slice(currentIndex, currentIndex + PAGE_SIZE);
 
@@ -58,7 +57,6 @@ function loadMoreRows() {
   currentIndex += PAGE_SIZE;
 
   if (currentIndex >= fullData.length) {
-    const btn = document.getElementById("stock-load-more");
-    if (btn) btn.style.display = "none";
+    document.getElementById("stock-load-more").style.display = "none";
   }
 }
