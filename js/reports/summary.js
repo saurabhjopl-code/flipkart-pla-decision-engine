@@ -14,23 +14,24 @@ function renderTrafficSummary(row) {
 
   const container = document.getElementById("traffic-summary");
 
-  const conversionRate = parsePercentage(row.conversion_rate);
-
   container.innerHTML = `
     ${buildCard(
       "Impressions",
-      formatNumber(row.impressions)
+      formatNumber(row.impressions),
+      calculateDelta(row.impressions, row.impressions_prev_7)
     )}
 
     ${buildCard(
       "Conversion Rate",
-      conversionRate + "%"
+      parsePercentage(row.conversion_rate) + "%",
+      null
     )}
 
     ${buildCard(
       "Gross Units & Sales",
       formatNumber(row.gross_units) + " Units",
-      "₹ " + formatCurrencyShort(row.gross_revenue)
+      "₹ " + formatCurrencyShort(row.gross_revenue),
+      calculateDelta(row.gross_units, row.gross_units_prev_7)
     )}
   `;
 }
@@ -45,7 +46,8 @@ function renderSalesSummary(row) {
     ${buildCard(
       "Gross Sales",
       formatNumber(row.gross_units),
-      "₹ " + formatCurrencyShort(row.gross_revenue)
+      "₹ " + formatCurrencyShort(row.gross_revenue),
+      calculateDelta(row.gross_units, row.gross_units_prev_7)
     )}
 
     ${buildCard(
@@ -69,22 +71,50 @@ function renderSalesSummary(row) {
     ${buildCard(
       "Net Sales",
       formatNumber(row.net_units),
-      "₹ " + formatCurrencyShort(row.net_revenue)
+      "₹ " + formatCurrencyShort(row.net_revenue),
+      calculateDelta(row.net_units, row.net_units_prev_7)
     )}
   `;
 }
 
-/* ================= HELPERS ================= */
+/* ================= CARD BUILDER ================= */
 
-function buildCard(title, value, subtext = "") {
+function buildCard(title, value, subtext = "", deltaHTML = "") {
+
   return `
     <div class="summary-card">
       <div class="summary-title">${title}</div>
       <div class="summary-value">${value}</div>
       ${subtext ? `<div class="summary-subtext">${subtext}</div>` : ""}
+      ${deltaHTML ? `<div class="summary-delta">${deltaHTML}</div>` : ""}
     </div>
   `;
 }
+
+/* ================= DELTA LOGIC ================= */
+
+function calculateDelta(current, previous) {
+
+  current = Number(current);
+  previous = Number(previous);
+
+  if (!previous || previous === 0) return "";
+
+  const change = ((current - previous) / previous) * 100;
+  const formatted = change.toFixed(1) + "%";
+
+  if (change > 0) {
+    return `<span class="delta-positive">▲ ${formatted}</span>`;
+  }
+
+  if (change < 0) {
+    return `<span class="delta-negative">▼ ${Math.abs(change).toFixed(1)}%</span>`;
+  }
+
+  return "";
+}
+
+/* ================= HELPERS ================= */
 
 function formatNumber(num) {
   return Number(num).toLocaleString("en-IN");
@@ -105,14 +135,11 @@ function formatCurrencyShort(num) {
   return num.toLocaleString("en-IN");
 }
 
-/* Safe % Parser */
 function parsePercentage(value) {
 
   if (!value) return "0.00";
 
-  // Remove % if exists
   value = String(value).replace("%", "");
-
   const num = Number(value);
 
   if (isNaN(num)) return "0.00";
