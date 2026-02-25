@@ -1,16 +1,20 @@
 // js/reports/plaRecommendation.js
 
+let currentIndex = 0;
+const PAGE_SIZE = 50;
+let fullData = [];
+
 export function renderPLAReport(data) {
+  const container = document.querySelector(".report-content");
 
-  const container = document.querySelector(".report-container");
+  fullData = data;
+  currentIndex = 0;
 
-  let html = `
-    <div class="report-title">PLA Recommendation Report</div>
-    <div style="overflow-x:auto;">
-    <table style="width:100%; border-collapse: collapse; font-size:14px;">
+  container.innerHTML = `
+    <table>
       <thead>
-        <tr style="background:#f1f5f9;">
-          <th style="padding:10px;">MPSKU</th>
+        <tr>
+          <th>MPSKU</th>
           <th>Brand</th>
           <th>Views</th>
           <th>Net Sale</th>
@@ -19,13 +23,29 @@ export function renderPLAReport(data) {
           <th>Decision</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="pla-body"></tbody>
+    </table>
+    <div class="load-more-wrapper">
+      <button id="load-more-btn" class="tab-btn">Load More</button>
+    </div>
   `;
 
-  data.forEach(row => {
-    html += `
-      <tr style="border-bottom:1px solid #e2e8f0;">
-        <td style="padding:10px;">${row.mpsku}</td>
+  loadMoreRows();
+
+  document
+    .getElementById("load-more-btn")
+    .addEventListener("click", loadMoreRows);
+}
+
+function loadMoreRows() {
+  const tbody = document.getElementById("pla-body");
+
+  const nextChunk = fullData.slice(currentIndex, currentIndex + PAGE_SIZE);
+
+  nextChunk.forEach(row => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${row.mpsku}</td>
         <td>${row.brand}</td>
         <td>${row.views}</td>
         <td>${row.net}</td>
@@ -36,7 +56,9 @@ export function renderPLAReport(data) {
     `;
   });
 
-  html += "</tbody></table></div>";
+  currentIndex += PAGE_SIZE;
 
-  container.innerHTML = html;
+  if (currentIndex >= fullData.length) {
+    document.getElementById("load-more-btn").style.display = "none";
+  }
 }
