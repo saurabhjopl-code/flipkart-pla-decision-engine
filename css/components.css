@@ -80,3 +80,7 @@ tbody tr:hover {
   background: rgba(239, 68, 68, 0.15);
   color: var(--danger);
 }
+.load-more-wrapper {
+  text-align: center;
+  margin-top: 20px;
+}
