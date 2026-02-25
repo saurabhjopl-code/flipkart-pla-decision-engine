@@ -18,21 +18,17 @@
   <header class="app-header">
     <div class="header-container">
 
-      <!-- Left: Logo -->
       <div class="header-left">
         <img src="./assets/logo.png" alt="Logo" class="app-logo" />
       </div>
 
-      <!-- Center: App Name -->
       <div class="header-center">
         <h1 class="app-title">
           Flipkart PLA Intelligence Engine
         </h1>
       </div>
 
-      <!-- Right: Reserved -->
       <div class="header-right">
-        <!-- Future: Export Button / Profile / Settings -->
       </div>
 
     </div>
@@ -45,13 +41,11 @@
     <!-- ================= SUMMARY SECTION ================= -->
     <section class="summary-section">
 
-      <!-- Traffic Summary -->
       <div class="summary-group">
         <h2 class="summary-heading">Traffic Summary</h2>
         <div class="summary-grid" id="traffic-summary"></div>
       </div>
 
-      <!-- Sales Summary -->
       <div class="summary-group">
         <h2 class="summary-heading">Sales Summary</h2>
         <div class="summary-grid" id="sales-summary"></div>
@@ -81,15 +75,12 @@
         </button>
       </div>
 
-
-      <!-- ================= REPORT CONTAINER ================= -->
       <div class="report-container">
         <div class="report-title">
           PLA Recommendation Report
         </div>
 
         <div class="report-content">
-          <!-- JS will render table here -->
         </div>
       </div>
 
@@ -100,61 +91,67 @@
 
   <!-- ================= JS MODULE LOADER ================= -->
   <script type="module">
-  import { CONFIG } from "./js/core/config.js";
-  import { fetchCSV } from "./js/core/dataLoader.js";
-  import { mergeData } from "./js/logic/decisionEngine.js";
-  import { renderPLAReport } from "./js/reports/plaRecommendation.js";
-  import { renderStockRisk } from "./js/reports/stockRisk.js";
-  import { renderListingIssues } from "./js/reports/listingIssue.js";
-  import { renderScalingOpportunities } from "./js/reports/scaling.js";
-  import { renderSummaryFromSheet } from "./js/reports/summary.js";
 
-  const SUMMARY_URL = "PASTE_YOUR_SUMMARY_CSV_LINK_HERE";
+    import { CONFIG } from "./js/core/config.js";
+    import { fetchCSV } from "./js/core/dataLoader.js";
+    import { mergeData } from "./js/logic/decisionEngine.js";
+    import { renderPLAReport } from "./js/reports/plaRecommendation.js";
+    import { renderStockRisk } from "./js/reports/stockRisk.js";
+    import { renderListingIssues } from "./js/reports/listingIssue.js";
+    import { renderScalingOpportunities } from "./js/reports/scaling.js";
+    import { renderSummaryFromSheet } from "./js/reports/summary.js";
 
-  let mergedData = [];
+    const SUMMARY_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSlTVpLNaHcWlBzhl0Tho9cSXOD80l3ma_c_Fa-P7IoY7R22X1ewihnY1zZOCHwduVyTUOhyKmRnGkT/pub?gid=875060208&single=true&output=csv";
 
-  async function init() {
+    let mergedData = [];
 
-    const [traffic, sales, summary] = await Promise.all([
-      fetchCSV(CONFIG.TRAFFIC_URL),
-      fetchCSV(CONFIG.SALES_URL),
-      fetchCSV(SUMMARY_URL)
-    ]);
+    async function init() {
 
-    mergedData = mergeData(traffic, sales);
+      const [traffic, sales, summary] = await Promise.all([
+        fetchCSV(CONFIG.TRAFFIC_URL),
+        fetchCSV(CONFIG.SALES_URL),
+        fetchCSV(SUMMARY_URL)
+      ]);
 
-    renderSummaryFromSheet(summary);
-    renderPLAReport(mergedData);
-  }
+      mergedData = mergeData(traffic, sales);
 
-  init();
+      renderSummaryFromSheet(summary);
+      renderPLAReport(mergedData);
+    }
 
-  const tabs = document.querySelectorAll(".tab-btn");
-  const reportTitle = document.querySelector(".report-title");
+    init();
 
-  const titles = {
-    pla: "PLA Recommendation Report",
-    stock: "Stock Risk Report",
-    listing: "Listing Issue Report",
-    scaling: "Scaling Opportunity Report"
-  };
 
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
+    /* ================= TAB SWITCHING ================= */
 
-      const type = tab.dataset.tab;
-      reportTitle.textContent = titles[type];
+    const tabs = document.querySelectorAll(".tab-btn");
+    const reportTitle = document.querySelector(".report-title");
 
-      if (type === "pla") renderPLAReport(mergedData);
-      if (type === "stock") renderStockRisk(mergedData);
-      if (type === "listing") renderListingIssues(mergedData);
-      if (type === "scaling") renderScalingOpportunities(mergedData);
+    const titles = {
+      pla: "PLA Recommendation Report",
+      stock: "Stock Risk Report",
+      listing: "Listing Issue Report",
+      scaling: "Scaling Opportunity Report"
+    };
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        const type = tab.dataset.tab;
+        reportTitle.textContent = titles[type];
+
+        if (type === "pla") renderPLAReport(mergedData);
+        if (type === "stock") renderStockRisk(mergedData);
+        if (type === "listing") renderListingIssues(mergedData);
+        if (type === "scaling") renderScalingOpportunities(mergedData);
+
+      });
     });
-  });
 
-</script>
+  </script>
 
 </body>
 </html>
