@@ -14,6 +14,8 @@ function renderTrafficSummary(row) {
 
   const container = document.getElementById("traffic-summary");
 
+  const conversionRate = parsePercentage(row.conversion_rate);
+
   container.innerHTML = `
     ${buildCard(
       "Impressions",
@@ -22,7 +24,7 @@ function renderTrafficSummary(row) {
 
     ${buildCard(
       "Conversion Rate",
-      (Number(row.conversion_rate) * 100).toFixed(2) + "%"
+      conversionRate + "%"
     )}
 
     ${buildCard(
@@ -101,4 +103,19 @@ function formatCurrencyShort(num) {
   }
 
   return num.toLocaleString("en-IN");
+}
+
+/* Safe % Parser */
+function parsePercentage(value) {
+
+  if (!value) return "0.00";
+
+  // Remove % if exists
+  value = String(value).replace("%", "");
+
+  const num = Number(value);
+
+  if (isNaN(num)) return "0.00";
+
+  return num.toFixed(2);
 }
