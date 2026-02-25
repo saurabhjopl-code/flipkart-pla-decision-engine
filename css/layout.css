@@ -1,1 +1,105 @@
-/* Layout Styles */
+body {
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(
+    135deg,
+    var(--bg-gradient-start),
+    var(--bg-gradient-end)
+  );
+  margin: 0;
+  color: var(--text-primary);
+}
+
+/* ================= HEADER ================= */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.75);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: var(--shadow-soft);
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: auto;
+  padding: 0 30px;
+  height: 72px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+}
+
+.header-left {
+  justify-self: start;
+}
+
+.header-center {
+  justify-self: center;
+}
+
+.header-right {
+  justify-self: end;
+}
+
+.app-logo {
+  height: 38px;
+}
+
+.app-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+/* ================= MAIN ================= */
+
+.main-wrapper {
+  max-width: 1400px;
+  margin: var(--space-xl) auto;
+  padding: 0 30px;
+}
+
+/* ================= SUMMARY ================= */
+
+.summary-section {
+  margin-bottom: var(--space-lg);
+}
+
+.summary-placeholder {
+  height: 120px;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* ================= REPORTS ================= */
+
+.reports-section {
+  margin-top: var(--space-md);
+}
+
+.report-container {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 35px;
+  box-shadow: var(--shadow-medium);
+  min-height: 500px;
+}
+
+.report-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.report-content {
+  width: 100%;
+}
