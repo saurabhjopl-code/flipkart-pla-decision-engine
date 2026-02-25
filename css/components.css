@@ -185,3 +185,18 @@ tbody tr:hover {
   font-size: 20px;
   font-weight: 600;
 }
+/* ================= DELTA ================= */
+
+.summary-delta {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.delta-positive {
+  color: #10b981;
+}
+
+.delta-negative {
+  color: #ef4444;
+}
