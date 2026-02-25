@@ -1,97 +1,73 @@
 // js/reports/summary.js
 
-export function renderSummary(mergedData) {
-  renderTrafficSummary(mergedData);
-  renderSalesSummary(mergedData);
+export function renderSummaryFromSheet(summaryData) {
+
+  const row = summaryData[0];
+
+  renderTrafficSummary(row);
+  renderSalesSummary(row);
 }
 
 /* ================= TRAFFIC SUMMARY ================= */
 
-function renderTrafficSummary(data) {
+function renderTrafficSummary(row) {
 
   const container = document.getElementById("traffic-summary");
-
-  const totalImpressions = sum(data, "views");
-  const totalGrossUnits = sum(data, "gross");
-  const totalRevenue = sum(data, "gross_revenue");
-  const totalNetUnits = sum(data, "net");
-
-  const conversionRate =
-    totalImpressions === 0
-      ? 0
-      : (totalNetUnits / totalImpressions) * 100;
 
   container.innerHTML = `
     ${buildCard(
       "Impressions",
-      formatNumber(totalImpressions)
+      formatNumber(row.impressions)
     )}
 
     ${buildCard(
       "Conversion Rate",
-      conversionRate.toFixed(2) + "%"
+      (Number(row.conversion_rate) * 100).toFixed(2) + "%"
     )}
 
     ${buildCard(
       "Gross Units & Sales",
-      formatNumber(totalGrossUnits) + " Units",
-      "₹ " + formatCurrencyShort(totalRevenue)
+      formatNumber(row.gross_units) + " Units",
+      "₹ " + formatCurrencyShort(row.gross_revenue)
     )}
   `;
 }
 
 /* ================= SALES SUMMARY ================= */
 
-function renderSalesSummary(data) {
+function renderSalesSummary(row) {
 
   const container = document.getElementById("sales-summary");
-
-  const grossUnits = sum(data, "gross");
-  const grossRevenue = sum(data, "gross_revenue");
-
-  const cancellationUnits = sum(data, "cancellation_units");
-  const cancellationAmount = sum(data, "cancellation_amount");
-
-  const returnUnits = sum(data, "return_units");
-  const returnAmount = sum(data, "return_amount");
-
-  /* ===== CORRECT BUSINESS CALCULATION ===== */
-
-  const salesAfterCancellationUnits = grossUnits - cancellationUnits;
-  const salesAfterCancellationRevenue = grossRevenue - cancellationAmount;
-
-  const netUnits = salesAfterCancellationUnits - returnUnits;
-  const netRevenue = salesAfterCancellationRevenue - returnAmount;
 
   container.innerHTML = `
     ${buildCard(
       "Gross Sales",
-      formatNumber(grossUnits),
-      "₹ " + formatCurrencyShort(grossRevenue)
+      formatNumber(row.gross_units),
+      "₹ " + formatCurrencyShort(row.gross_revenue)
     )}
 
     ${buildCard(
       "Cancellations",
-      formatNumber(cancellationUnits),
-      "₹ " + formatCurrencyShort(cancellationAmount)
+      formatNumber(row.cancellation_units),
+      "₹ " + formatCurrencyShort(row.cancellation_amount)
     )}
 
     ${buildCard(
       "Sales After Cancellations",
-      formatNumber(salesAfterCancellationUnits),
-      "₹ " + formatCurrencyShort(salesAfterCancellationRevenue)
+      formatNumber(row.sales_after_cancel_units),
+      "₹ " + formatCurrencyShort(row.sales_after_cancel_revenue)
     )}
 
     ${buildCard(
       "Returns",
-      formatNumber(returnUnits),
-      "₹ " + formatCurrencyShort(returnAmount)
+      formatNumber(row.return_units),
+      "₹ " + formatCurrencyShort(row.return_amount)
     )}
 
     ${buildCard(
       "Net Sales",
-      formatNumber(netUnits),
-      "₹ " + formatCurrencyShort(netRevenue)
+      formatNumber(row.net_units),
+      "₹ " + formatCurrencyShort(row.net_revenue)
     )}
   `;
 }
@@ -108,15 +84,13 @@ function buildCard(title, value, subtext = "") {
   `;
 }
 
-function sum(data, key) {
-  return data.reduce((acc, row) => acc + (Number(row[key]) || 0), 0);
-}
-
 function formatNumber(num) {
-  return num.toLocaleString("en-IN");
+  return Number(num).toLocaleString("en-IN");
 }
 
 function formatCurrencyShort(num) {
+
+  num = Number(num);
 
   if (num >= 10000000) {
     return (num / 10000000).toFixed(2) + " Cr";
