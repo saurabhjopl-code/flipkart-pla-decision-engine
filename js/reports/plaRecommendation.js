@@ -10,11 +10,12 @@ export function renderPLAReport(data) {
   const contentContainer = document.querySelector(".report-content");
   const titleContainer = document.querySelector(".report-title");
 
+  // SORT BY GROSS HIGH → LOW
   fullData = [...data].sort((a, b) => b.gross - a.gross);
   filteredData = [...fullData];
   currentIndex = 0;
 
-  // Inject filters inside title row
+  // Title + Filters in single row
   titleContainer.innerHTML = `
     <div class="report-title-row">
       <span>PLA Recommendation Report</span>
@@ -29,6 +30,9 @@ export function renderPLAReport(data) {
           <th>MPSKU</th>
           <th>Brand</th>
           <th>Views</th>
+          <th>Clicks</th>
+          <th>CTR</th>
+          <th>CVR</th>
           <th>Gross Sale</th>
           <th>Net Sale</th>
           <th>Stock</th>
@@ -46,6 +50,8 @@ export function renderPLAReport(data) {
   attachFilterEvents();
   loadMoreRows();
 }
+
+/* ================= FILTERS ================= */
 
 function buildFilters() {
 
@@ -96,20 +102,34 @@ function applyFilters() {
   loadMoreRows();
 }
 
+/* ================= LOAD MORE ================= */
+
 function loadMoreRows() {
 
   const tbody = document.getElementById("pla-body");
   const nextChunk = filteredData.slice(currentIndex, currentIndex + PAGE_SIZE);
 
   nextChunk.forEach(row => {
+
+    const ctr = row.views > 0
+      ? ((row.clicks / row.views) * 100).toFixed(2) + "%"
+      : "0.00%";
+
+    const cvr = row.clicks > 0
+      ? ((row.net / row.clicks) * 100).toFixed(2) + "%"
+      : "0.00%";
+
     tbody.innerHTML += `
       <tr>
         <td>${row.mpsku}</td>
         <td>${row.brand}</td>
-        <td>${row.views}</td>
-        <td>${row.gross}</td>
-        <td>${row.net}</td>
-        <td>${row.stock}</td>
+        <td>${formatNumber(row.views)}</td>
+        <td>${formatNumber(row.clicks)}</td>
+        <td>${ctr}</td>
+        <td>${cvr}</td>
+        <td>${formatNumber(row.gross)}</td>
+        <td>${formatNumber(row.net)}</td>
+        <td>${formatNumber(row.stock)}</td>
         <td>${row.decision}</td>
       </tr>
     `;
@@ -120,4 +140,10 @@ function loadMoreRows() {
   if (currentIndex >= filteredData.length) {
     document.getElementById("pla-load-more").style.display = "none";
   }
+}
+
+/* ================= HELPERS ================= */
+
+function formatNumber(num) {
+  return Number(num).toLocaleString("en-IN");
 }
